@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>404 Not Found</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 2em; }
+    h1 { color: crimson; }
+    code { background: #f3f3f3; padding: 4px 8px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <h1>404 - Page Not Found</h1>
+  <p>You tried to go to:</p>
+  <p><code id="path"></code></p>
+  <a href="/">Back to homepage</a>
+
+  <script>
+    const path = window.location.pathname + window.location.search + window.location.hash;
+    document.getElementById("path").textContent = path;
+  </script>
+</body>
+</html>
