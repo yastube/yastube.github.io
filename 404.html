@@ -13,10 +13,22 @@
   <p>You tried to go to:</p>
   <p><code id="path"></code></p>
   <a href="/">Back to homepage</a>
+  <div id="result"></div>
 
   <script>
     const path = window.location.pathname + window.location.search + window.location.hash;
-    document.getElementById("path").textContent = path;
+    const cleanedPath = path.replaceAll("/", "");
+    document.getElementById("path").textContent = cleanedPath;
+    function fetchUUID() {
+        const username = cleanedPath;
+    const url = `https://corsproxy.io/?https://api.mojang.com/users/profiles/minecraft/${username}`;
+    fetch(url)
+      .then(response => {
+        if (!response.ok) throw new Error("Username not found");
+        return response.json();
+        document.getElementById("path").textContent = cleanedPath;
+      })
+    });
   </script>
 </body>
 </html>
