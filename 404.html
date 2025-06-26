@@ -1,34 +1,174 @@
 <!DOCTYPE html>
 <html>
+
+
+<script src="https://unpkg.com/skinview3d/bundles/skinview3d.bundle.js"></script>
+
+
 <head>
-  <title>404 Not Found</title>
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css">
+<!--<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+https://unpkg.com/skinview3d/bundles/skinview3d.bundle.js -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Player Finder</title>
   <style>
-    body { font-family: sans-serif; text-align: center; padding: 2em; }
-    h1 { color: crimson; }
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600&display=swap');
+@keyframes fadeIn {0% {opacity: 0; transform: translateY(-100px);}100% {opacity: 1; transform: translateY(0px);}}
+canvas {filter: drop-shadow(0 0 20px black);}
+:root {
+    --theme: dark;
+    --primary: #202020;
+    --secondary: #181717;
+    --accent: #e08828;
+    --text: #f8f9fa;
+    --border-radius: 12px;
+    --border: #404346;
+    
+}
+
+    * {box-sizing: border-box;text-decoration: none;border: none;outline: none;font-family: 'Poppins', sans-serif;}
+    body {box-sizing: border-box;background-color: #12161a; bottom: 100%; font-family: sans-serif; padding: 1em 10vw; color: white; overflow-x: hidden;}
+    .box {display: flex; height:80vh; background-color: #12161a; padding: 4em; border-radius: 4px;   flex-direction: column; }
+    .username {display: flex; flex-direction: row; justify-content: space-between;}
+    
+    .ba {display: flex; background-color: #24282c; padding: 0.5em 2em; margin:1rem 0; border-radius: 15px; color: white; justify-content: space-between;}
+   
+    a {color: white; transition: 0.5s ease; border-bottom: 3px solid transparent;}
+    a:hover {color: gray;}
+    h1 { color: white;}
+    nav {display: flex;flex-direction: row;}
+    nav a{margin:0 10px 0 0;}
     code { background: #f3f3f3; padding: 4px 8px; border-radius: 4px; }
+
+    .wrapper{
+background-color: #212529;
+background-image:  repeating-linear-gradient(45deg, #1d2024 25%, transparent 25%, transparent 75%, #1d2024 75%, #1d2024), repeating-linear-gradient(45deg, #1d2024 25%, #212529 25%, #212529 75%, #1d2024 75%, #1d2024);
+background-position: 0 0, 23px 23px;
+background-size: 46px 46px;
+border: 2px solid var(--border);
+border-radius: 10px;
+}
+.list{display:flex; flex-direction: column;}
+.head{display: flex; background-color:#24282c; border-radius: 4px 4px 0px 0px; padding: 0 1em;}
+.profile{ margin-bottom:15px; padding-bottom:0.3em; display:flex; flex-direction: column; align-self: flex-start;background-color:#1e2226; border-radius: 4px; width:30vw; border: 2px solid var(--border);}
+.id{
+  font-family: monospace;
+  padding: 5px 5px;
+  font-size: 0.95em;
+}
+
+@media(max-width:995px){
+body{background-color:red;}
+.test, .box,.username{
+  flex-direction: column;
+}
+} 
   </style>
 </head>
-<body>
-  <h1>404 - Page Not Found</h1>
-  <p>You tried to go to:</p>
-  <p><code id="path"></code></p>
-  <a href="/">Back to homepage</a>
-  <div id="result"></div>
 
+
+<body>
+  <div class="ba">
+
+   <h3>NameMC</h3>
+   <nav>
+      <a href="#"><h3>Players</h3></a>
+      <a href="#"><h3>Capes</h3></a>
+      <a href="#"><h3>Settings</h3></a>
+
+
+   </nav>
+  </div>
+<div class="box">
+  <h1><span style="display: block; width: 100%; border-bottom: 1px solid var(--border); padding:5px;">
+      <div id="result">yastube</div>
+    </span></h1>
+  <div class="username">
+    <div class="wrapper">
+      <canvas id="skin_container" style="cursor:move;background-color: transparent;"></canvas>
+    </div>
+    <div class="list">
+    <div class="profile">
+      <div class="head" style="border-bottom: 1px solid var(--border); display:flex; align-items: center; gap:6px;"><i class="fa-solid fa-user" style="vertical-align: middle;"></i> Profile</div>
+    <div style="padding:0 1em; display: flex; justify-content:space-between; " class="test">UUID
+        <div id="id" class="id">UUID</div></div>
+    <div style="padding:0em 1em 0em; display: flex; justify-content:space-between;" class="test">Information
+        <div id="i" class="id">Information</div></div>
+    </div>
+    <div class="profile">
+      <div class="head" style="border-bottom: 1px solid var(--border); display:flex; align-items: center; gap:6px;"><i class="fa-solid fa-shirt" style="vertical-align: middle;"></i> Cosmetics</div>
+<div style="padding:0em 1em 0.2em; display: flex; justify-content:space-between; border-bottom: 1px solid var(--border);" class="test">Current Cape</div>
+        <canvas id="capeCanvas" width="40" height="64" style="align-self: center; margin:10px"></canvas>
+<div style="padding:0em 1em 0.2em; display: flex; justify-content:space-between; border-bottom: 1px solid var(--border);" class="test">Optifine Cape</div>
+        <canvas id="optifinecapeCanvas" width="40" height="64" style="align-self: center; margin:10px"></canvas>
+    </div>
+    </div>
+
+  </div>
+
+
+
+
+  </div>
+</body>
   <script>
     const path = window.location.pathname + window.location.search + window.location.hash;
-    const cleanedPath = path.replaceAll("/", "");
-    document.getElementById("path").textContent = cleanedPath;
-    function fetchUUID() {
-        const username = cleanedPath;
+    const cleanedPath = "Habu"; // path.replaceAll("/", "");
+ //   document.getElementById("path").textContent = cleanedPath;
+    const username = cleanedPath;
     const url = `https://corsproxy.io/?https://api.mojang.com/users/profiles/minecraft/${username}`;
-    fetch(url)
-      .then(response => {
-        if (!response.ok) throw new Error("Username not found");
-        return response.json();
-        document.getElementById("path").textContent = cleanedPath;
-      })
+
+function loadcape(url, type, x, y, e, e1){
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+  img.src = url;
+  img.onload = () => {
+    const canvas = document.getElementById(type);
+    const ctx = canvas.getContext("2d");
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(img, e, e1, x, y, 0, 0, 40, 64);
+    const croppedDataUrl = canvas.toDataURL();
+};
+}
+
+
+fetch(url)
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("result").textContent = data.name;
+    const uuid = data.id;
+    document.title = data.name;
+    document.getElementById("id").textContent = `${uuid}`;
+    loadcape(`https://mcapi.duckdns.org/api/capes/${uuid}`, "capeCanvas", 10, 16, 1, 1);
+    loadcape(`https://mcapi.duckdns.org/api/capes/optifine/${username}`, "optifinecapeCanvas", 20, 32, 2, 2);
+    document.head.appendChild(Object.assign(document.createElement("link"), {rel: "icon",href: `https://mcapi.duckdns.org/api/avatar/${uuid}`}));
+    loadskin(uuid);
+    fetch(`https://mcapi.duckdns.org/api/info/${uuid}`)
+    .then(res => res.json())
+    .then(text => {
+      document.getElementById("i").textContent = text.description;
     });
+});
+
+function loadskin(uuid){
+  const viewer = new skinview3d.SkinViewer({
+    canvas: document.getElementById("skin_container"),
+    width: 276,
+    height: 368,
+    skin: `https://mcapi.duckdns.org/api/skin/${uuid}`
+  });
+  viewer.controls.enableZoom = false;
+  viewer.controls.enableRotate = true;
+  viewer.loadCape(`https://mcapi.duckdns.org/api/capes/${uuid}`);
+  viewer.cameraLight.intensity = 5;
+  viewer.globalLight.intensity = 2.75;
+  viewer.animation = new skinview3d.WalkingAnimation();
+  viewer.zoom = 0.85;
+  viewer.animation.speed = 0.55; // Optional: adjust speed
+  viewer.renderer.antialias = false;
+  viewer.playerObject.rotation.y = Math.PI / 5;
+}
   </script>
-</body>
+
+
 </html>
